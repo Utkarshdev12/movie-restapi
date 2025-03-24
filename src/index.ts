@@ -14,7 +14,6 @@ type Movie = {
 
 let movies: Movie[] = []
 
-// Add a new movie
 app.post('/movies', async (c) => {
   const body = await c.req.json()
   const { id, title, director, releaseYear, genre } = body
@@ -31,7 +30,6 @@ app.post('/movies', async (c) => {
   return c.json({ message: 'Movie added successfully' }, 201)
 })
 
-// Update an existing movie partially by its ID
 app.patch('/movies/:id', async (c) => {
   const id = c.req.param('id')
   const body = await c.req.json()
@@ -42,14 +40,12 @@ app.patch('/movies/:id', async (c) => {
   return c.json({ message: 'Movie updated successfully' }, 200)
 })
 
-// Get the details of a movie by its ID
 app.get('/movies/:id', (c) => {
   const id = c.req.param('id')
   const movie = movies.find(m => m.id === id)
   return movie ? c.json(movie) : c.json({ error: 'Movie not found' }, 404)
 })
 
-// Delete a movie by its ID
 app.delete('/movies/:id', (c) => {
   const id = c.req.param('id')
   const initialLength = movies.length
@@ -57,7 +53,6 @@ app.delete('/movies/:id', (c) => {
   return c.json({ message: initialLength > movies.length ? 'Movie deleted' : 'Movie not found' })
 })
 
-// Rate a movie (1-5 stars)
 app.post('/movies/:id/rating', async (c) => {
   const id = c.req.param('id')
   const { rating } = await c.req.json()
@@ -69,7 +64,6 @@ app.post('/movies/:id/rating', async (c) => {
   return c.json({ message: 'Rating added successfully' })
 })
 
-// Get the average rating of a movie
 app.get('/movies/:id/rating', (c) => {
   const id = c.req.param('id')
   const movie = movies.find(m => m.id === id)
@@ -80,7 +74,6 @@ app.get('/movies/:id/rating', (c) => {
   return c.json({ averageRating: avgRating })
 })
 
-// Get top-rated movies
 app.get('/top-rated', (c) => {
   if (movies.length === 0) return c.json({ error: 'No movies found' }, 404)
 
@@ -98,16 +91,12 @@ app.get('/top-rated', (c) => {
   return c.json(sortedMovies)
 })
 
-
-
-// Get movies by genre
 app.get('/movies/genre/:genre', (c) => {
   const genre = c.req.param('genre')
   const filteredMovies = movies.filter(m => m.genre.toLowerCase() === genre.toLowerCase())
   return filteredMovies.length ? c.json(filteredMovies) : c.json({ error: 'No movies found for this genre' }, 404)
 })
 
-// Get movies by director
 app.get('/movies/director/:director', (c) => {
   const director = c.req.param('director')
   const filteredMovies = movies.filter(m => m.director.toLowerCase() === director.toLowerCase())
@@ -137,8 +126,6 @@ app.get('/search/:keyword', (c) => {
   return c.json(filteredMovies);
 });
 
-
-// Start the server
 serve({
   fetch: app.fetch,
   port: 3000
